@@ -111,6 +111,40 @@
         .score-zero {
             color: #64748b;
         }
+        /* Popup styles */
+        .overlay-popup {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .popup-select-player {
+            background: #fff;
+            padding: 28px 20px 18px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px #0002;
+            text-align: center;
+            min-width: 240px;
+        }
+        .popup-select-player button {
+            margin: 6px 4px;
+        }
+        .popup-select-player .cancel-btn {
+            background: #ddd;
+            color: #222;
+            margin-top: 20px;
+        }
+        .popup-select-player .cancel-btn:hover {
+            background: #bbb;
+        }
+        .popup-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
@@ -204,7 +238,7 @@
                 minus1Button.textContent = "-1";
                 minus1Button.title = "Retirer 1 point";
                 minus1Button.addEventListener("click", () => {
-                    player.score -= 1; // Permet les scores négatifs
+                    player.score -= 1;
                     updateTable();
                 });
 
@@ -212,6 +246,15 @@
                 actionsCell.appendChild(plus2Button);
                 actionsCell.appendChild(plus3Button);
                 actionsCell.appendChild(minus1Button);
+
+                // Nouveau bouton : ajouter les points d’un autre joueur
+                const addFromOtherButton = document.createElement("button");
+                addFromOtherButton.textContent = "+ d'un autre joueur";
+                addFromOtherButton.title = "Ajouter les points d'un autre joueur à ce joueur";
+                addFromOtherButton.addEventListener("click", () => {
+                    showPlayerSelect(index);
+                });
+                actionsCell.appendChild(addFromOtherButton);
 
                 const deleteButton = document.createElement("button");
                 deleteButton.textContent = "Supprimer";
@@ -230,6 +273,59 @@
                 tableBody.appendChild(row);
             });
         }
+
+        // Fonction pour afficher la popup de choix du joueur
+        function showPlayerSelect(targetIndex) {
+            // Créer le fond sombre
+            let overlay = document.createElement("div");
+            overlay.className = "overlay-popup";
+
+            // Créer la popup
+            let popup = document.createElement("div");
+            popup.className = "popup-select-player";
+
+            let title = document.createElement("div");
+            title.textContent = "Choisir un joueur pour ajouter ses points";
+            title.className = "popup-title";
+            popup.appendChild(title);
+
+            players.forEach((otherPlayer, idx) => {
+                if (idx !== targetIndex) {
+                    let btn = document.createElement("button");
+                    btn.textContent = `${otherPlayer.name} (${otherPlayer.score})`;
+                    btn.addEventListener("click", () => {
+                        players[targetIndex].score += otherPlayer.score;
+                        document.body.removeChild(overlay);
+                        updateTable();
+                    });
+                    popup.appendChild(btn);
+                }
+            });
+
+            // Si il n'y a pas d'autres joueurs
+            if (players.length <= 1) {
+                let info = document.createElement("div");
+                info.textContent = "Aucun autre joueur disponible";
+                info.style.margin = "10px 0 10px 0";
+                popup.appendChild(info);
+            }
+
+            // Bouton Annuler
+            let cancelBtn = document.createElement("button");
+            cancelBtn.textContent = "Annuler";
+            cancelBtn.className = "cancel-btn";
+            cancelBtn.addEventListener("click", () => {
+                document.body.removeChild(overlay);
+            });
+            popup.appendChild(document.createElement("br"));
+            popup.appendChild(cancelBtn);
+
+            overlay.appendChild(popup);
+            document.body.appendChild(overlay);
+        }
+
+        // Initial rendering
+        updateTable();
     </script>
 </body>
 </html>
