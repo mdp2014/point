@@ -5,79 +5,126 @@
     <title>Scores baby fooooooot !!!</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #F2F2F2;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0e7ff 0%, #b2f7ef 100%);
+            min-height: 100vh;
+            margin: 0;
         }
         h1 {
-            margin-left: 10%;
+            margin: 40px auto 20px auto;
+            text-align: center;
+            color: #1e3a8a;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
         }
         table {
-            width: 80%;
-            margin: auto;
+            width: 90%;
+            max-width: 900px;
+            margin: 30px auto;
             border-collapse: collapse;
-            box-shadow: 0px 2px 5px #999;
-            background-color: #FFFFFF;
-            color: #333333;
+            box-shadow: 0px 8px 32px 0px #4f46e540;
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            overflow: hidden;
         }
         th, td {
-            padding: 10px;
-            border: 1px solid #CCCCCC;
+            padding: 18px 10px;
+            border-bottom: 1px solid #e5e7eb;
             text-align: center;
-            font-weight: bold;
-            font-size: 20px;
+            font-size: 1.15rem;
         }
-        th, tfoot {
-            background-color: #0079fc;
-            color: #FFFFFF;
+        th {
+            background: linear-gradient(90deg, #3b82f6 60%, #38bdf8 100%);
+            color: #fff;
+            border: none;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+        tr:last-child td {
+            border-bottom: none;
         }
         button {
-            padding: 15px;
-            font-size: 16px;
-            background-color: #0079fc;
-            color: #FFFFFF;
+            padding: 10px 18px;
+            font-size: 1rem;
+            background-color: #3b82f6;
+            color: #fff;
             border: none;
-            border-radius: 10px;
+            border-radius: 6px;
             cursor: pointer;
-            margin-right: 0.75%;
+            margin: 2px;
+            font-weight: 500;
+            transition: background 0.15s, transform 0.1s;
+            box-shadow: 0 2px 8px #0001;
         }
         button:hover {
-            background-color: #0F7DC2;
+            background-color: #2563eb;
+            transform: translateY(-2px) scale(1.05);
+        }
+        .btn-danger {
+            background: #ef4444;
+        }
+        .btn-danger:hover {
+            background: #b91c1c;
         }
         .ajoutjoueur {
-            margin-left: 10%;
-            margin-top: 1%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            gap: 10px;
         }
         #playerName {
-            border: solid;
-            border-radius: 10px;
-            padding: 10px;
-            font-size: 20px;
-            margin-right: 10px;
-            background-color: #F2F2F2;
-            color: #000000;
-            border-color: black;
-            border-width: 2px;
-            width: 75%;
-            box-shadow: 2px 2px 2px #F6F6F6;
+            border: 2px solid #60a5fa;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1.15rem;
+            width: 300px;
+            background-color: #f1f5f9;
+            color: #111827;
+            box-shadow: 1px 2px 8px #4f46e520;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        #playerName:focus {
+            border-color: #2563eb;
+            background: #fff;
+        }
+        @media (max-width: 600px) {
+            table, .ajoutjoueur {
+                width: 99%;
+                flex-direction: column;
+            }
+            #playerName {
+                width: 100%;
+                font-size: 1rem;
+            }
+        }
+        .score-negative {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .score-positive {
+            color: #059669;
+            font-weight: bold;
+        }
+        .score-zero {
+            color: #64748b;
         }
     </style>
 </head>
 <body>
-    <br>
     <h1>Tableau des scores</h1>
-    <br>
     <table>
         <thead>
             <tr>
                 <th>Joueur</th>
                 <th>Points</th>
-                <th>Paniers en plus</th>
+                <th>Paniers / Actions</th>
             </tr>
         </thead>
-        <tbody id="players">
-        </tbody>
+        <tbody id="players"></tbody>
     </table>
-    <br>
     <div class="ajoutjoueur">
         <input type="text" id="playerName" placeholder="Ajouter un joueur">
         <button id="addButton">Ajouter</button>
@@ -96,13 +143,8 @@
 
         function addPlayer() {
             const playerName = playerNameInput.value.trim();
-            if (playerName === "") {
-                return;
-            }
-            players.push({
-                name: playerName,
-                score: 0
-            });
+            if (playerName === "") return;
+            players.push({ name: playerName, score: 0 });
             playerNameInput.value = "";
             updateTable();
         }
@@ -112,22 +154,31 @@
             updateTable();
         }
 
+        function getScoreClass(score) {
+            if (score < 0) return 'score-negative';
+            if (score > 0) return 'score-positive';
+            return 'score-zero';
+        }
+
         function updateTable() {
             const tableBody = document.getElementById("players");
             tableBody.innerHTML = "";
 
             players.forEach((player, index) => {
                 const row = document.createElement("tr");
+
                 const nameCell = document.createElement("td");
                 nameCell.textContent = player.name;
 
                 const scoreCell = document.createElement("td");
                 scoreCell.textContent = player.score;
+                scoreCell.className = getScoreClass(player.score);
 
                 const actionsCell = document.createElement("td");
 
                 const plus1Button = document.createElement("button");
                 plus1Button.textContent = "+1";
+                plus1Button.title = "Ajouter 1 point";
                 plus1Button.addEventListener("click", () => {
                     player.score += 1;
                     updateTable();
@@ -135,6 +186,7 @@
 
                 const plus2Button = document.createElement("button");
                 plus2Button.textContent = "+2";
+                plus2Button.title = "Ajouter 2 points";
                 plus2Button.addEventListener("click", () => {
                     player.score += 2;
                     updateTable();
@@ -142,6 +194,7 @@
 
                 const plus3Button = document.createElement("button");
                 plus3Button.textContent = "+3";
+                plus3Button.title = "Ajouter 3 points";
                 plus3Button.addEventListener("click", () => {
                     player.score += 3;
                     updateTable();
@@ -149,11 +202,10 @@
 
                 const minus1Button = document.createElement("button");
                 minus1Button.textContent = "-1";
+                minus1Button.title = "Retirer 1 point";
                 minus1Button.addEventListener("click", () => {
-                    if (player.score > 0) {
-                        player.score -= 1;
-                        updateTable();
-                    }
+                    player.score -= 1; // Permet les scores négatifs
+                    updateTable();
                 });
 
                 actionsCell.appendChild(plus1Button);
@@ -163,6 +215,8 @@
 
                 const deleteButton = document.createElement("button");
                 deleteButton.textContent = "Supprimer";
+                deleteButton.className = "btn-danger";
+                deleteButton.title = "Supprimer ce joueur";
                 deleteButton.addEventListener("click", () => {
                     deletePlayer(index);
                 });
