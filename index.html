@@ -2,98 +2,96 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Scores baby fooooooot !!!</title>
+    <title>Compteur - Timer minimal</title>
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(120deg, #e0e7ff 0%, #b2f7ef 100%);
-            min-height: 100vh;
             margin: 0;
+            min-height: 100vh;
         }
         h1 {
-            margin: 40px auto 20px auto;
             text-align: center;
             color: #1e3a8a;
-            font-size: 2.5rem;
-            letter-spacing: 2px;
+            margin-top: 40px;
         }
-        .timer-container {
+        .timer-section {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            margin-top: 25px;
-            margin-bottom: 20px;
+            justify-content: center;
+            height: 80vh;
         }
-        .timer-controls {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            margin-top: 10px;
-        }
-        .timer-slider-label {
-            margin-bottom: 6px;
-            font-size: 1.10rem;
-            color: #2563eb;
-        }
-        .timer-slider {
-            width: 230px;
-            accent-color: #3b82f6;
-        }
-        .timer-btn {
-            border: none;
-            background: #3b82f6;
-            color: #fff;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            font-size: 1.25rem;
+        .timer-display {
+            font-size: 3rem;
             font-weight: bold;
-            margin: 0 7px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px #93c5fd60;
-            transition: background 0.17s, transform 0.13s;
-            outline: none;
-        }
-        .timer-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            background: #a5b4fc;
-        }
-        .timer-btn:hover:not(:disabled) {
-            background: #2563eb;
-            transform: scale(1.08);
-        }
-        #timerDisplay {
-            font-size: 2.4rem;
             color: #1e3a8a;
-            font-weight: bold;
+            margin: 40px 0 20px 0;
             letter-spacing: 2px;
-            min-width: 110px;
-            text-align: center;
-            background: #dbeafe;
-            border-radius: 10px;
-            padding: 8px 26px;
+            background: #fff;
+            border-radius: 15px;
+            padding: 18px 38px;
             box-shadow: 0 2px 8px #60a5fa30;
             border: 2px solid #3b82f6;
-            margin: 18px 0 4px 0;
-            user-select: none;
-        }
-        #timerEndMsg {
-            width: 100%;
+            min-width: 190px;
             text-align: center;
-            font-size: 1.6rem;
-            text-shadow: 0 2px 16px #f87171bb;
-            animation: timerPulse 1.2s infinite alternate;
-            color: #dc2626;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
         }
-        @keyframes timerPulse {
-            0% { color: #f87171; transform: scale(1);}
-            100% { color: #b91c1c; transform: scale(1.13);}
+        .progress-bar-bg {
+            width: 350px;
+            max-width: 90vw;
+            height: 28px;
+            background: #e5e7eb;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px #60a5fa30;
+            margin-bottom: 30px;
+            border: 2px solid #3b82f6;
         }
-        /* Table & scores styles - inchangés */
+        .progress-bar-fg {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8 0%, #3b82f6 100%);
+            transition: width 1s linear;
+        }
+        .ajoutjoueur {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        #playerName {
+            border: 2px solid #60a5fa;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1.15rem;
+            width: 300px;
+            background-color: #f1f5f9;
+            color: #111827;
+            box-shadow: 1px 2px 8px #4f46e520;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        #playerName:focus {
+            border-color: #2563eb;
+            background: #fff;
+        }
+        button {
+            padding: 10px 18px;
+            font-size: 1rem;
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 2px;
+            font-weight: 500;
+            transition: background 0.15s, transform 0.1s;
+            box-shadow: 0 2px 8px #0001;
+        }
+        button:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px) scale(1.05);
+        }
         table {
             width: 90%;
             max-width: 900px;
@@ -120,402 +118,158 @@
         tr:last-child td {
             border-bottom: none;
         }
-        button {
-            padding: 10px 18px;
-            font-size: 1rem;
-            background-color: #3b82f6;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin: 2px;
-            font-weight: 500;
-            transition: background 0.15s, transform 0.1s;
-            box-shadow: 0 2px 8px #0001;
-        }
-        button:hover {
-            background-color: #2563eb;
-            transform: translateY(-2px) scale(1.05);
-        }
         .btn-danger {
             background: #ef4444;
         }
         .btn-danger:hover {
             background: #b91c1c;
         }
-        .ajoutjoueur {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 30px;
-            margin-bottom: 40px;
-            gap: 10px;
-        }
-        #playerName {
-            border: 2px solid #60a5fa;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 1.15rem;
-            width: 300px;
-            background-color: #f1f5f9;
-            color: #111827;
-            box-shadow: 1px 2px 8px #4f46e520;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        #playerName:focus {
-            border-color: #2563eb;
-            background: #fff;
-        }
         @media (max-width: 600px) {
-            table, .ajoutjoueur {
-                width: 99%;
-                flex-direction: column;
-            }
-            #playerName {
-                width: 100%;
-                font-size: 1rem;
-            }
-            .timer-controls { flex-direction: column; gap: 8px; }
-            .timer-slider { width: 100vw; max-width: 96vw;}
-        }
-        .score-negative {
-            color: #ef4444;
-            font-weight: bold;
-        }
-        .score-positive {
-            color: #059669;
-            font-weight: bold;
-        }
-        .score-zero {
-            color: #64748b;
-        }
-        .overlay-popup {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.35);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-        .popup-select-player {
-            background: #fff;
-            padding: 28px 20px 18px 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px #0002;
-            text-align: center;
-            min-width: 240px;
-        }
-        .popup-select-player button {
-            margin: 6px 4px;
-        }
-        .popup-select-player .cancel-btn {
-            background: #ddd;
-            color: #222;
-            margin-top: 20px;
-        }
-        .popup-select-player .cancel-btn:hover {
-            background: #bbb;
-        }
-        .popup-title {
-            font-weight: bold;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
+            .progress-bar-bg { width: 97vw; }
+            table, .ajoutjoueur { width: 99%; flex-direction: column;}
+            #playerName { width: 100%; font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-    <!-- TIMER -->
-    <div class="timer-container">
-        <div class="timer-slider-label">
-            Durée du match :
-            <span id="sliderValue">10</span> min
-        </div>
-        <input type="range" min="1" max="60" value="10" class="timer-slider" id="timerSlider">
-        <div class="timer-controls">
-            <button class="timer-btn" id="startTimer" title="Démarrer">&#9658;</button>
-            <button class="timer-btn" id="pauseTimer" title="Pause" disabled>&#10073;&#10073;</button>
-            <button class="timer-btn" id="resetTimer" title="Réinitialiser" disabled>&#8635;</button>
-            <span id="timerDisplay">10:00</span>
-        </div>
-        <div id="timerEndMsg" style="display:none;"></div>
-        <audio id="timerSound">
-            <source src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b5b3b2e9.mp3" type="audio/mp3">
-        </audio>
-    </div>
     <h1>Tableau des scores</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Joueur</th>
-                <th>Points</th>
-                <th>Paniers / Actions</th>
-            </tr>
-        </thead>
-        <tbody id="players"></tbody>
-    </table>
-    <div class="ajoutjoueur">
-        <input type="text" id="playerName" placeholder="Ajouter un joueur">
-        <button id="addButton">Ajouter</button>
+    <div id="mainSection">
+        <table id="scoreTable">
+            <thead>
+                <tr>
+                    <th>Joueur</th>
+                    <th>Points</th>
+                    <th>Paniers / Actions</th>
+                </tr>
+            </thead>
+            <tbody id="players"></tbody>
+        </table>
+        <div class="ajoutjoueur" id="ajoutJoueurDiv">
+            <input type="text" id="playerName" placeholder="Ajouter un joueur">
+            <button id="addButton">Ajouter</button>
+        </div>
     </div>
-    <script>
-        // --- TIMER MATCH ---
-        let timerInterval = null;
-        let timerTimeLeft = 600; // en secondes (10 min au départ)
-        let timerRunning = false;
-        let timerDuration = 10; // minutes
+    <div id="timerSection" class="timer-section" style="display:none;">
+        <div class="timer-display" id="timerDisplay">10:00</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fg" id="progressBar" style="width:100%"></div>
+        </div>
+    </div>
+    <audio id="timerSound">
+        <source src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b5b3b2e9.mp3" type="audio/mp3">
+    </audio>
+<script>
+let players = [];
+const playerNameInput = document.getElementById("playerName");
+const addButton = document.getElementById("addButton");
+const playersTbody = document.getElementById("players");
+const mainSection = document.getElementById("mainSection");
+const timerSection = document.getElementById("timerSection");
+const timerDisplay = document.getElementById("timerDisplay");
+const progressBar = document.getElementById("progressBar");
+const timerSound = document.getElementById("timerSound");
 
-        const timerSlider = document.getElementById("timerSlider");
-        const sliderValue = document.getElementById("sliderValue");
-        const timerDisplay = document.getElementById("timerDisplay");
-        const timerEndMsg = document.getElementById("timerEndMsg");
-        const startBtn = document.getElementById("startTimer");
-        const pauseBtn = document.getElementById("pauseTimer");
-        const resetBtn = document.getElementById("resetTimer");
-        const timerSound = document.getElementById("timerSound");
+let timerInterval = null;
+let timerTimeLeft = 600;
+let timerDuration = 10; // en minutes
 
-        // Affichage slider en temps réel
-        timerSlider.addEventListener("input", function () {
-            sliderValue.textContent = timerSlider.value;
-            if (!timerRunning) {
-                timerDuration = parseInt(timerSlider.value, 10);
-                timerTimeLeft = timerDuration * 60;
-                updateTimerDisplay();
-            }
+playerNameInput.addEventListener("keydown", function(event) {
+    if (event.key === 'Enter') addPlayer();
+});
+addButton.addEventListener("click", addPlayer);
+
+function addPlayer() {
+    const playerName = playerNameInput.value.trim();
+    if (playerName === "") return;
+    players.push({ name: playerName, score: 0 });
+    playerNameInput.value = "";
+    updateTable();
+    if (players.length === 1) launchMinimalTimer();
+}
+
+function deletePlayer(index) {
+    players.splice(index, 1);
+    updateTable();
+}
+
+function updateTable() {
+    playersTbody.innerHTML = "";
+    players.forEach((player, index) => {
+        const row = document.createElement("tr");
+        const nameCell = document.createElement("td");
+        nameCell.textContent = player.name;
+
+        const scoreCell = document.createElement("td");
+        scoreCell.textContent = player.score;
+
+        const actionsCell = document.createElement("td");
+
+        const plus1Button = document.createElement("button");
+        plus1Button.textContent = "+1";
+        plus1Button.addEventListener("click", () => {
+            player.score += 1;
+            updateTable();
         });
 
-        function updateTimerDisplay() {
-            const min = Math.floor(timerTimeLeft / 60);
-            const sec = timerTimeLeft % 60;
-            timerDisplay.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-        }
-
-        function startTimer() {
-            if (timerRunning) return;
-            timerRunning = true;
-            startBtn.disabled = true;
-            pauseBtn.disabled = false;
-            resetBtn.disabled = false;
-            timerSlider.disabled = true; // Désactive le slider une fois lancé
-            timerEndMsg.textContent = "";
-            timerEndMsg.style.display = "none";
-            timerInterval = setInterval(() => {
-                if (timerTimeLeft > 0) {
-                    timerTimeLeft--;
-                    updateTimerDisplay();
-                    if (timerTimeLeft === 0) {
-                        clearInterval(timerInterval);
-                        timerRunning = false;
-                        startBtn.disabled = true;
-                        pauseBtn.disabled = true;
-                        timerEndMsg.textContent = "⏰ TEMPS ÉCOULÉ !";
-                        timerEndMsg.style.display = "block";
-                        timerSound.pause();
-                        timerSound.currentTime = 0;
-                        timerSound.play().catch(()=>{});
-                    }
-                }
-            }, 1000);
-        }
-
-        function pauseTimer() {
-            if (!timerRunning) return;
-            clearInterval(timerInterval);
-            timerRunning = false;
-            startBtn.disabled = false;
-            pauseBtn.disabled = true;
-        }
-
-        function resetTimer() {
-            clearInterval(timerInterval);
-            timerRunning = false;
-            timerDuration = parseInt(timerSlider.value, 10);
-            timerTimeLeft = timerDuration * 60;
-            updateTimerDisplay();
-            startBtn.disabled = false;
-            pauseBtn.disabled = true;
-            resetBtn.disabled = true;
-            timerEndMsg.textContent = "";
-            timerEndMsg.style.display = "none";
-            timerSlider.disabled = false; // Réactive le slider au reset
-        }
-
-        function initTimer() {
-            startBtn.addEventListener("click", startTimer);
-            pauseBtn.addEventListener("click", pauseTimer);
-            resetBtn.addEventListener("click", resetTimer);
-            sliderValue.textContent = timerSlider.value;
-            timerDuration = parseInt(timerSlider.value, 10);
-            timerTimeLeft = timerDuration * 60;
-            updateTimerDisplay();
-            timerEndMsg.style.display = "none";
-        }
-        initTimer();
-
-        // --- SCORE TABLE ---
-        let players = [];
-        const playerNameInput = document.getElementById("playerName");
-        const addButton = document.getElementById("addButton");
-
-        playerNameInput.addEventListener("keydown", function(event) {
-            if (event.key === 'Enter') {
-                addPlayer();
-            }
+        const minus1Button = document.createElement("button");
+        minus1Button.textContent = "-1";
+        minus1Button.addEventListener("click", () => {
+            player.score -= 1;
+            updateTable();
         });
-        addButton.addEventListener("click", addPlayer);
 
-        function addPlayer() {
-            const playerName = playerNameInput.value.trim();
-            if (playerName === "") return;
-            players.push({ name: playerName, score: 0 });
-            playerNameInput.value = "";
-            updateTable();
-        }
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Supprimer";
+        deleteButton.className = "btn-danger";
+        deleteButton.addEventListener("click", () => {
+            deletePlayer(index);
+        });
 
-        function deletePlayer(index) {
-            players.splice(index, 1);
-            updateTable();
-        }
+        actionsCell.appendChild(plus1Button);
+        actionsCell.appendChild(minus1Button);
+        actionsCell.appendChild(deleteButton);
 
-        function getScoreClass(score) {
-            if (score < 0) return 'score-negative';
-            if (score > 0) return 'score-positive';
-            return 'score-zero';
-        }
+        row.appendChild(nameCell);
+        row.appendChild(scoreCell);
+        row.appendChild(actionsCell);
 
-        function updateTable() {
-            const tableBody = document.getElementById("players");
-            tableBody.innerHTML = "";
+        playersTbody.appendChild(row);
+    });
+}
 
-            players.forEach((player, index) => {
-                const row = document.createElement("tr");
-
-                const nameCell = document.createElement("td");
-                nameCell.textContent = player.name;
-
-                const scoreCell = document.createElement("td");
-                scoreCell.textContent = player.score;
-                scoreCell.className = getScoreClass(player.score);
-
-                const actionsCell = document.createElement("td");
-
-                const plus1Button = document.createElement("button");
-                plus1Button.textContent = "+1";
-                plus1Button.title = "Ajouter 1 point";
-                plus1Button.addEventListener("click", () => {
-                    player.score += 1;
-                    updateTable();
-                });
-
-                const plus2Button = document.createElement("button");
-                plus2Button.textContent = "+2";
-                plus2Button.title = "Ajouter 2 points";
-                plus2Button.addEventListener("click", () => {
-                    player.score += 2;
-                    updateTable();
-                });
-
-                const plus3Button = document.createElement("button");
-                plus3Button.textContent = "+3";
-                plus3Button.title = "Ajouter 3 points";
-                plus3Button.addEventListener("click", () => {
-                    player.score += 3;
-                    updateTable();
-                });
-
-                const minus1Button = document.createElement("button");
-                minus1Button.textContent = "-1";
-                minus1Button.title = "Retirer 1 point";
-                minus1Button.addEventListener("click", () => {
-                    player.score -= 1;
-                    updateTable();
-                });
-
-                actionsCell.appendChild(plus1Button);
-                actionsCell.appendChild(plus2Button);
-                actionsCell.appendChild(plus3Button);
-                actionsCell.appendChild(minus1Button);
-
-                // Nouveau bouton : ajouter les points d’un autre joueur
-                const addFromOtherButton = document.createElement("button");
-                addFromOtherButton.textContent = "+ d'un autre joueur";
-                addFromOtherButton.title = "Ajouter les points d'un autre joueur à ce joueur";
-                addFromOtherButton.addEventListener("click", () => {
-                    showPlayerSelect(index);
-                });
-                actionsCell.appendChild(addFromOtherButton);
-
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "Supprimer";
-                deleteButton.className = "btn-danger";
-                deleteButton.title = "Supprimer ce joueur";
-                deleteButton.addEventListener("click", () => {
-                    deletePlayer(index);
-                });
-
-                actionsCell.appendChild(deleteButton);
-
-                row.appendChild(nameCell);
-                row.appendChild(scoreCell);
-                row.appendChild(actionsCell);
-
-                tableBody.appendChild(row);
-            });
-        }
-
-        // Fonction pour afficher la popup de choix du joueur
-        function showPlayerSelect(targetIndex) {
-            // Créer le fond sombre
-            let overlay = document.createElement("div");
-            overlay.className = "overlay-popup";
-
-            // Créer la popup
-            let popup = document.createElement("div");
-            popup.className = "popup-select-player";
-
-            let title = document.createElement("div");
-            title.textContent = "Choisir un joueur pour ajouter ses points";
-            title.className = "popup-title";
-            popup.appendChild(title);
-
-            players.forEach((otherPlayer, idx) => {
-                if (idx !== targetIndex) {
-                    let btn = document.createElement("button");
-                    btn.textContent = `${otherPlayer.name} (${otherPlayer.score})`;
-                    btn.addEventListener("click", () => {
-                        players[targetIndex].score += otherPlayer.score;
-                        document.body.removeChild(overlay);
-                        updateTable();
-                    });
-                    popup.appendChild(btn);
-                }
-            });
-
-            // Si il n'y a pas d'autres joueurs
-            if (players.length <= 1) {
-                let info = document.createElement("div");
-                info.textContent = "Aucun autre joueur disponible";
-                info.style.margin = "10px 0 10px 0";
-                popup.appendChild(info);
+function launchMinimalTimer() {
+    // Cache tout sauf le timer minimal
+    mainSection.style.display = "none";
+    timerSection.style.display = "flex";
+    timerDuration = 10; // minutes (modifiable ici)
+    timerTimeLeft = timerDuration * 60;
+    updateTimerDisplayAndBar();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        if (timerTimeLeft > 0) {
+            timerTimeLeft--;
+            updateTimerDisplayAndBar();
+            if (timerTimeLeft === 0) {
+                clearInterval(timerInterval);
+                timerDisplay.textContent = "⏰ TEMPS ÉCOULÉ !";
+                progressBar.style.width = "0%";
+                timerSound.pause();
+                timerSound.currentTime = 0;
+                timerSound.play().catch(()=>{});
             }
-
-            // Bouton Annuler
-            let cancelBtn = document.createElement("button");
-            cancelBtn.textContent = "Annuler";
-            cancelBtn.className = "cancel-btn";
-            cancelBtn.addEventListener("click", () => {
-                document.body.removeChild(overlay);
-            });
-            popup.appendChild(document.createElement("br"));
-            popup.appendChild(cancelBtn);
-
-            overlay.appendChild(popup);
-            document.body.appendChild(overlay);
         }
+    }, 1000);
+}
 
-        // Initial rendering
-        updateTable();
-    </script>
+function updateTimerDisplayAndBar() {
+    const min = Math.floor(timerTimeLeft / 60);
+    const sec = timerTimeLeft % 60;
+    timerDisplay.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+    const percent = (timerTimeLeft / (timerDuration * 60)) * 100;
+    progressBar.style.width = percent + "%";
+}
+
+updateTable();
+</script>
 </body>
 </html>
