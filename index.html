@@ -10,13 +10,32 @@
             min-height: 100vh;
             margin: 0;
         }
+
+        #progressBarContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 10px;
+            width: 100%;
+            background-color: #dbeafe;
+            z-index: 999;
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background-color: #3b82f6;
+            transition: width 1s linear;
+        }
+
         h1 {
-            margin: 40px auto 20px auto;
+            margin: 60px auto 20px auto;
             text-align: center;
             color: #1e3a8a;
             font-size: 2.5rem;
             letter-spacing: 2px;
         }
+
         .timer-container {
             display: flex;
             flex-direction: column;
@@ -24,22 +43,34 @@
             justify-content: flex-start;
             margin-top: 25px;
             margin-bottom: 20px;
+            transition: max-height 0.5s ease-in-out, opacity 0.4s;
+            overflow: hidden;
         }
+
+        .timer-container.hidden {
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
         .timer-controls {
             display: flex;
             align-items: center;
             gap: 18px;
             margin-top: 10px;
         }
+
         .timer-slider-label {
             margin-bottom: 6px;
             font-size: 1.10rem;
             color: #2563eb;
         }
+
         .timer-slider {
             width: 230px;
             accent-color: #3b82f6;
         }
+
         .timer-btn {
             border: none;
             background: #3b82f6;
@@ -55,15 +86,18 @@
             transition: background 0.17s, transform 0.13s;
             outline: none;
         }
+
         .timer-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             background: #a5b4fc;
         }
+
         .timer-btn:hover:not(:disabled) {
             background: #2563eb;
             transform: scale(1.08);
         }
+
         #timerDisplay {
             font-size: 2.4rem;
             color: #1e3a8a;
@@ -79,6 +113,7 @@
             margin: 18px 0 4px 0;
             user-select: none;
         }
+
         #timerEndMsg {
             width: 100%;
             text-align: center;
@@ -89,11 +124,12 @@
             margin-bottom: 10px;
             letter-spacing: 2px;
         }
+
         @keyframes timerPulse {
             0% { color: #f87171; transform: scale(1);}
             100% { color: #b91c1c; transform: scale(1.13);}
         }
-        /* Table & scores styles - inchangés */
+
         table {
             width: 90%;
             max-width: 900px;
@@ -104,12 +140,14 @@
             border-radius: 12px;
             overflow: hidden;
         }
+
         th, td {
             padding: 18px 10px;
             border-bottom: 1px solid #e5e7eb;
             text-align: center;
             font-size: 1.15rem;
         }
+
         th {
             background: linear-gradient(90deg, #3b82f6 60%, #38bdf8 100%);
             color: #fff;
@@ -117,9 +155,11 @@
             font-size: 1.2rem;
             letter-spacing: 1px;
         }
+
         tr:last-child td {
             border-bottom: none;
         }
+
         button {
             padding: 10px 18px;
             font-size: 1rem;
@@ -133,16 +173,20 @@
             transition: background 0.15s, transform 0.1s;
             box-shadow: 0 2px 8px #0001;
         }
+
         button:hover {
             background-color: #2563eb;
             transform: translateY(-2px) scale(1.05);
         }
+
         .btn-danger {
             background: #ef4444;
         }
+
         .btn-danger:hover {
             background: #b91c1c;
         }
+
         .ajoutjoueur {
             display: flex;
             justify-content: center;
@@ -151,6 +195,7 @@
             margin-bottom: 40px;
             gap: 10px;
         }
+
         #playerName {
             border: 2px solid #60a5fa;
             border-radius: 8px;
@@ -163,10 +208,12 @@
             outline: none;
             transition: border-color 0.2s;
         }
+
         #playerName:focus {
             border-color: #2563eb;
             background: #fff;
         }
+
         @media (max-width: 600px) {
             table, .ajoutjoueur {
                 width: 99%;
@@ -179,17 +226,21 @@
             .timer-controls { flex-direction: column; gap: 8px; }
             .timer-slider { width: 100vw; max-width: 96vw;}
         }
+
         .score-negative {
             color: #ef4444;
             font-weight: bold;
         }
+
         .score-positive {
             color: #059669;
             font-weight: bold;
         }
+
         .score-zero {
             color: #64748b;
         }
+
         .overlay-popup {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -199,6 +250,7 @@
             justify-content: center;
             z-index: 9999;
         }
+
         .popup-select-player {
             background: #fff;
             padding: 28px 20px 18px 20px;
@@ -207,17 +259,21 @@
             text-align: center;
             min-width: 240px;
         }
+
         .popup-select-player button {
             margin: 6px 4px;
         }
+
         .popup-select-player .cancel-btn {
             background: #ddd;
             color: #222;
             margin-top: 20px;
         }
+
         .popup-select-player .cancel-btn:hover {
             background: #bbb;
         }
+
         .popup-title {
             font-weight: bold;
             margin-bottom: 15px;
@@ -226,7 +282,10 @@
     </style>
 </head>
 <body>
-    <!-- TIMER -->
+    <div id="progressBarContainer">
+        <div id="progressBar"></div>
+    </div>
+
     <div class="timer-container">
         <div class="timer-slider-label">
             Durée du match :
@@ -244,6 +303,7 @@
             <source src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b5b3b2e9.mp3" type="audio/mp3">
         </audio>
     </div>
+
     <h1>Tableau des scores</h1>
     <table>
         <thead>
@@ -259,12 +319,12 @@
         <input type="text" id="playerName" placeholder="Ajouter un joueur">
         <button id="addButton">Ajouter</button>
     </div>
+
     <script>
-        // --- TIMER MATCH ---
         let timerInterval = null;
-        let timerTimeLeft = 600; // en secondes (10 min au départ)
+        let timerTimeLeft = 600;
         let timerRunning = false;
-        let timerDuration = 10; // minutes
+        let timerDuration = 10;
 
         const timerSlider = document.getElementById("timerSlider");
         const sliderValue = document.getElementById("sliderValue");
@@ -275,7 +335,6 @@
         const resetBtn = document.getElementById("resetTimer");
         const timerSound = document.getElementById("timerSound");
 
-        // Affichage slider en temps réel
         timerSlider.addEventListener("input", function () {
             sliderValue.textContent = timerSlider.value;
             if (!timerRunning) {
@@ -297,23 +356,30 @@
             startBtn.disabled = true;
             pauseBtn.disabled = false;
             resetBtn.disabled = false;
-            timerSlider.disabled = true; // Désactive le slider une fois lancé
+            timerSlider.disabled = true;
             timerEndMsg.textContent = "";
             timerEndMsg.style.display = "none";
+
+            document.querySelector(".timer-container").classList.add("hidden");
+            document.getElementById("progressBar").style.width = "0%";
+            let totalSeconds = timerTimeLeft;
+
             timerInterval = setInterval(() => {
                 if (timerTimeLeft > 0) {
                     timerTimeLeft--;
                     updateTimerDisplay();
+                    let percent = ((totalSeconds - timerTimeLeft) / totalSeconds) * 100;
+                    document.getElementById("progressBar").style.width = `${percent}%`;
+
                     if (timerTimeLeft === 0) {
                         clearInterval(timerInterval);
                         timerRunning = false;
-                        startBtn.disabled = true;
                         pauseBtn.disabled = true;
                         timerEndMsg.textContent = "⏰ TEMPS ÉCOULÉ !";
                         timerEndMsg.style.display = "block";
                         timerSound.pause();
                         timerSound.currentTime = 0;
-                        timerSound.play().catch(()=>{});
+                        timerSound.play().catch(() => {});
                     }
                 }
             }, 1000);
@@ -338,7 +404,9 @@
             resetBtn.disabled = true;
             timerEndMsg.textContent = "";
             timerEndMsg.style.display = "none";
-            timerSlider.disabled = false; // Réactive le slider au reset
+            timerSlider.disabled = false;
+            document.querySelector(".timer-container").classList.remove("hidden");
+            document.getElementById("progressBar").style.width = "0%";
         }
 
         function initTimer() {
@@ -353,7 +421,6 @@
         }
         initTimer();
 
-        // --- SCORE TABLE ---
         let players = [];
         const playerNameInput = document.getElementById("playerName");
         const addButton = document.getElementById("addButton");
@@ -390,7 +457,6 @@
 
             players.forEach((player, index) => {
                 const row = document.createElement("tr");
-
                 const nameCell = document.createElement("td");
                 nameCell.textContent = player.name;
 
@@ -400,44 +466,17 @@
 
                 const actionsCell = document.createElement("td");
 
-                const plus1Button = document.createElement("button");
-                plus1Button.textContent = "+1";
-                plus1Button.title = "Ajouter 1 point";
-                plus1Button.addEventListener("click", () => {
-                    player.score += 1;
-                    updateTable();
+                ["+1", "+2", "+3", "-1"].forEach(text => {
+                    const btn = document.createElement("button");
+                    btn.textContent = text;
+                    btn.title = text.includes("-") ? "Retirer des points" : "Ajouter des points";
+                    btn.addEventListener("click", () => {
+                        player.score += parseInt(text, 10);
+                        updateTable();
+                    });
+                    actionsCell.appendChild(btn);
                 });
 
-                const plus2Button = document.createElement("button");
-                plus2Button.textContent = "+2";
-                plus2Button.title = "Ajouter 2 points";
-                plus2Button.addEventListener("click", () => {
-                    player.score += 2;
-                    updateTable();
-                });
-
-                const plus3Button = document.createElement("button");
-                plus3Button.textContent = "+3";
-                plus3Button.title = "Ajouter 3 points";
-                plus3Button.addEventListener("click", () => {
-                    player.score += 3;
-                    updateTable();
-                });
-
-                const minus1Button = document.createElement("button");
-                minus1Button.textContent = "-1";
-                minus1Button.title = "Retirer 1 point";
-                minus1Button.addEventListener("click", () => {
-                    player.score -= 1;
-                    updateTable();
-                });
-
-                actionsCell.appendChild(plus1Button);
-                actionsCell.appendChild(plus2Button);
-                actionsCell.appendChild(plus3Button);
-                actionsCell.appendChild(minus1Button);
-
-                // Nouveau bouton : ajouter les points d’un autre joueur
                 const addFromOtherButton = document.createElement("button");
                 addFromOtherButton.textContent = "+ d'un autre joueur";
                 addFromOtherButton.title = "Ajouter les points d'un autre joueur à ce joueur";
@@ -455,22 +494,17 @@
                 });
 
                 actionsCell.appendChild(deleteButton);
-
                 row.appendChild(nameCell);
                 row.appendChild(scoreCell);
                 row.appendChild(actionsCell);
-
                 tableBody.appendChild(row);
             });
         }
 
-        // Fonction pour afficher la popup de choix du joueur
         function showPlayerSelect(targetIndex) {
-            // Créer le fond sombre
             let overlay = document.createElement("div");
             overlay.className = "overlay-popup";
 
-            // Créer la popup
             let popup = document.createElement("div");
             popup.className = "popup-select-player";
 
@@ -492,7 +526,6 @@
                 }
             });
 
-            // Si il n'y a pas d'autres joueurs
             if (players.length <= 1) {
                 let info = document.createElement("div");
                 info.textContent = "Aucun autre joueur disponible";
@@ -500,7 +533,6 @@
                 popup.appendChild(info);
             }
 
-            // Bouton Annuler
             let cancelBtn = document.createElement("button");
             cancelBtn.textContent = "Annuler";
             cancelBtn.className = "cancel-btn";
@@ -514,7 +546,6 @@
             document.body.appendChild(overlay);
         }
 
-        // Initial rendering
         updateTable();
     </script>
 </body>
