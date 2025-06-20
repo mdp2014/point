@@ -145,9 +145,60 @@
             margin-bottom: 15px;
             font-size: 1.1rem;
         }
+        /* TIMER */
+        .timer-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        #timerDisplay {
+            font-size: 2rem;
+            margin-left: 18px;
+            color: #1e3a8a;
+            font-weight: bold;
+            letter-spacing: 2px;
+            min-width: 85px;
+            text-align: center;
+            background: #dbeafe;
+            border-radius: 6px;
+            padding: 2px 16px;
+            box-shadow: 0 2px 8px #60a5fa30;
+            border: 2px solid #3b82f6;
+            margin-bottom: 6px;
+        }
+        #timerEndMsg {
+            width: 100%;
+            text-align: center;
+            font-size: 1.3rem;
+            text-shadow: 0 2px 8px #f87171bb;
+            animation: timerPulse 1.2s infinite alternate;
+        }
+        @keyframes timerPulse {
+            0% { color: #f87171; transform: scale(1);}
+            100% { color: #b91c1c; transform: scale(1.09);}
+        }
     </style>
 </head>
 <body>
+    <!-- TIMER -->
+    <div class="timer-container">
+        <label for="timerDuration">Durée du match : </label>
+        <input type="number" id="timerDuration" value="10" min="1" max="99" style="width:50px;">
+        <span>min</span>
+        <button id="startTimer">Démarrer</button>
+        <button id="pauseTimer" disabled>Pause</button>
+        <button id="resetTimer" disabled>Réinitialiser</button>
+        <div id="timerDisplay">10:00</div>
+        <div id="timerEndMsg" style="color:red; font-weight:bold; margin-top:8px;"></div>
+        <!-- Bruit pour la fin du match -->
+        <audio id="timerSound">
+            <source src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b5b3b2e9.mp3" type="audio/mp3">
+            <!-- Tu peux changer ce son par un autre si tu veux ! -->
+        </audio>
+    </div>
     <h1>Tableau des scores</h1>
     <table>
         <thead>
@@ -164,6 +215,90 @@
         <button id="addButton">Ajouter</button>
     </div>
     <script>
+        // --- TIMER MATCH ---
+        let timerInterval = null;
+        let timerTimeLeft = 0; // en secondes
+        let timerRunning = false;
+
+        const timerDurationInput = document.getElementById("timerDuration");
+        const timerDisplay = document.getElementById("timerDisplay");
+        const timerEndMsg = document.getElementById("timerEndMsg");
+        const startBtn = document.getElementById("startTimer");
+        const pauseBtn = document.getElementById("pauseTimer");
+        const resetBtn = document.getElementById("resetTimer");
+        const timerSound = document.getElementById("timerSound");
+
+        function updateTimerDisplay() {
+            const min = Math.floor(timerTimeLeft / 60);
+            const sec = timerTimeLeft % 60;
+            timerDisplay.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (timerRunning) return;
+            timerRunning = true;
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+            resetBtn.disabled = false;
+            timerEndMsg.textContent = "";
+            timerEndMsg.style.display = "none";
+            timerInterval = setInterval(() => {
+                if (timerTimeLeft > 0) {
+                    timerTimeLeft--;
+                    updateTimerDisplay();
+                    if (timerTimeLeft === 0) {
+                        clearInterval(timerInterval);
+                        timerRunning = false;
+                        startBtn.disabled = true;
+                        pauseBtn.disabled = true;
+                        timerEndMsg.textContent = "⏰ Temps écoulé !";
+                        timerEndMsg.style.display = "block";
+                        timerSound.currentTime = 0;
+                        timerSound.play();
+                    }
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            if (!timerRunning) return;
+            clearInterval(timerInterval);
+            timerRunning = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerTimeLeft = parseInt(timerDurationInput.value, 10) * 60;
+            updateTimerDisplay();
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            resetBtn.disabled = true;
+            timerEndMsg.textContent = "";
+            timerEndMsg.style.display = "none";
+        }
+
+        function initTimer() {
+            timerDurationInput.addEventListener("input", function () {
+                if (!timerRunning) {
+                    timerTimeLeft = parseInt(timerDurationInput.value, 10) * 60;
+                    updateTimerDisplay();
+                }
+            });
+            startBtn.addEventListener("click", startTimer);
+            pauseBtn.addEventListener("click", pauseTimer);
+            resetBtn.addEventListener("click", resetTimer);
+
+            // Initial display
+            timerTimeLeft = parseInt(timerDurationInput.value, 10) * 60;
+            updateTimerDisplay();
+            timerEndMsg.style.display = "none";
+        }
+        initTimer();
+
+        // --- SCORE TABLE ---
         let players = [];
         const playerNameInput = document.getElementById("playerName");
         const addButton = document.getElementById("addButton");
