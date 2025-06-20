@@ -93,19 +93,6 @@
             0% { color: #f87171; transform: scale(1);}
             100% { color: #b91c1c; transform: scale(1.13);}
         }
-        .test-sound-btn {
-            margin-left: 10px;
-            background: #10b981;
-            border-radius: 20px;
-            padding: 6px 16px;
-            font-size: 1rem;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-        .test-sound-btn:hover {
-            background: #059669;
-        }
         /* Table & scores styles - inchangés */
         table {
             width: 90%;
@@ -251,12 +238,10 @@
             <button class="timer-btn" id="pauseTimer" title="Pause" disabled>&#10073;&#10073;</button>
             <button class="timer-btn" id="resetTimer" title="Réinitialiser" disabled>&#8635;</button>
             <span id="timerDisplay">10:00</span>
-            <button class="test-sound-btn" id="testSoundBtn" title="Tester le son">🔊 Tester le son</button>
         </div>
         <div id="timerEndMsg" style="display:none;"></div>
         <audio id="timerSound">
             <source src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b5b3b2e9.mp3" type="audio/mp3">
-            <!-- Mets ici ton propre son si tu veux -->
         </audio>
     </div>
     <h1>Tableau des scores</h1>
@@ -289,7 +274,6 @@
         const pauseBtn = document.getElementById("pauseTimer");
         const resetBtn = document.getElementById("resetTimer");
         const timerSound = document.getElementById("timerSound");
-        const testSoundBtn = document.getElementById("testSoundBtn");
 
         // Affichage slider en temps réel
         timerSlider.addEventListener("input", function () {
@@ -313,6 +297,7 @@
             startBtn.disabled = true;
             pauseBtn.disabled = false;
             resetBtn.disabled = false;
+            timerSlider.disabled = true; // Désactive le slider une fois lancé
             timerEndMsg.textContent = "";
             timerEndMsg.style.display = "none";
             timerInterval = setInterval(() => {
@@ -326,7 +311,6 @@
                         pauseBtn.disabled = true;
                         timerEndMsg.textContent = "⏰ TEMPS ÉCOULÉ !";
                         timerEndMsg.style.display = "block";
-                        // Essayons de jouer le son à coup sûr
                         timerSound.pause();
                         timerSound.currentTime = 0;
                         timerSound.play().catch(()=>{});
@@ -354,18 +338,13 @@
             resetBtn.disabled = true;
             timerEndMsg.textContent = "";
             timerEndMsg.style.display = "none";
+            timerSlider.disabled = false; // Réactive le slider au reset
         }
 
         function initTimer() {
             startBtn.addEventListener("click", startTimer);
             pauseBtn.addEventListener("click", pauseTimer);
             resetBtn.addEventListener("click", resetTimer);
-            testSoundBtn.addEventListener("click", function() {
-                timerSound.pause();
-                timerSound.currentTime = 0;
-                timerSound.play();
-            });
-            // Initial display
             sliderValue.textContent = timerSlider.value;
             timerDuration = parseInt(timerSlider.value, 10);
             timerTimeLeft = timerDuration * 60;
