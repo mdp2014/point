@@ -322,7 +322,7 @@
 
     <script>
         let timerInterval = null;
-        let timerTimeLeft = 600;
+        let timerTimeLeft = 600; // 10 minutes par défaut
         let timerRunning = false;
         let timerDuration = 10;
 
@@ -359,9 +359,8 @@
             timerSlider.disabled = true;
             timerEndMsg.textContent = "";
             timerEndMsg.style.display = "none";
-
             document.querySelector(".timer-container").classList.add("hidden");
-            document.getElementById("progressBar").style.width = "0%";
+
             let totalSeconds = timerTimeLeft;
 
             timerInterval = setInterval(() => {
@@ -371,7 +370,9 @@
                     let percent = ((totalSeconds - timerTimeLeft) / totalSeconds) * 100;
                     document.getElementById("progressBar").style.width = `${percent}%`;
 
+                    // Change la couleur de la barre à la fin
                     if (timerTimeLeft === 0) {
+                        document.getElementById("progressBar").style.backgroundColor = "#ef4444"; // Rouge
                         clearInterval(timerInterval);
                         timerRunning = false;
                         pauseBtn.disabled = true;
@@ -407,6 +408,7 @@
             timerSlider.disabled = false;
             document.querySelector(".timer-container").classList.remove("hidden");
             document.getElementById("progressBar").style.width = "0%";
+            document.getElementById("progressBar").style.backgroundColor = "#3b82f6"; // Restaure la couleur initiale
         }
 
         function initTimer() {
@@ -419,6 +421,7 @@
             updateTimerDisplay();
             timerEndMsg.style.display = "none";
         }
+
         initTimer();
 
         let players = [];
@@ -547,6 +550,11 @@
         }
 
         updateTable();
+
+        // Démarrage automatique du timer à l'ouverture de la page
+        window.addEventListener("load", () => {
+            startTimer();
+        });
     </script>
 </body>
 </html>
